@@ -7,7 +7,7 @@ import argparse
 import time
 import torch.optim as optim
 
-from torch.autograd.gradcheck import zero_gradients
+# from torch.autograd.gradcheck import zero_gradients
 
 def max_margin_logit_loss(logits,y):
     logit_org = logits.gather(1,y.view(-1,1))
@@ -49,7 +49,9 @@ def MT(model,data,target,eps=0.1,eps_iter=0.1,bounds=[],steps=100,w_reg=25,lin=5
             eps_iter /= drop
         
         # make gradient of img to zeros
-        zero_gradients(img) 
+        # zero_gradients(img) 
+        if img.grad is not None:
+            img.grad.zero_()
         # forward pass        
         #orig_out = model(orig_img)
         #P_out = nn.Softmax(dim=1)(orig_out)
@@ -116,7 +118,9 @@ def GAMA_MT(model,data,target,eps,eps_iter,bounds,steps,w_reg,lin,SCHED,drop,rr,
             eps_iter /= drop
         
         # make gradient of img to zeros
-        zero_gradients(img) 
+        # zero_gradients(img) 
+        if img.grad is not None:
+            img.grad.zero_()
         # forward pass        
         orig_out = model(orig_img)
         P_out = nn.Softmax(dim=1)(orig_out)
@@ -200,7 +204,9 @@ def GAMA_PGD(model,data,target,eps,eps_iter,bounds,steps,w_reg,lin,SCHED,drop):
             eps_iter /= drop
         
         # make gradient of img to zeros
-        zero_gradients(img) 
+        # zero_gradients(img) 
+        if img.grad is not None:
+            img.grad.zero_()
         # forward pass        
         orig_out = model(orig_img)
         P_out = nn.Softmax(dim=1)(orig_out)
